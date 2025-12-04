@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+}
+
+.register-page {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.register-content {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 25px;
+  background: #ffffff;
+  border-radius: 0 15px 15px 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow-y: hidden;
+}
+
+.register-content h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.register-content p {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #6a4bc3;
+  box-shadow: 0 0 6px rgba(106, 75, 195, 0.2);
+}
+
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6a4bc3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.register-btn:hover {
+  background: #5938a8;
+}
+
+.login-link {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 12px;
+  color: #555;
+}
+
+.login-link a {
+  color: #6a4bc3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.illustration {
+  flex: 0 0 50%;
+  display: flex;
+  overflow: hidden;
+}
+
+.illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.error-box,
+.successMsg-box {
+  position: fixed;
+  top: 2px;
+  right: 2px;
+  color: white;
+  padding: 7px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1000;
+}
+
+.error-box {
+  background-color: rgb(232, 96, 96);
+}
+
+.successMsg-box {
+  background-color: green;
+}
+
+.error-box.hide,
+.successMsg-box.hide {
+  opacity: 0;
+}

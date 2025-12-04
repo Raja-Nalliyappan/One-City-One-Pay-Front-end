@@ -1,0 +1,459 @@
+/* ------------------- Reset & Base ------------------- */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.metro-page {
+  width: 100%;
+}
+
+.metro-booking {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 1200px;
+  width: 95%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.metro-booking-left {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 60px;
+  box-sizing: border-box;
+}
+
+.metro-booking-left h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  font-weight: 700;
+  color: black;
+}
+
+.metro-booking-left p {
+  font-size: 16px;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.metro-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  width: 65%;
+}
+
+.metro-inputs input {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+
+.metro-inputs input:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+.metro-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.metro-buttons button {
+  padding: 12px 25px;
+  background-color: black;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.metro-buttons button:hover {
+  background-color: #005bb5;
+  transform: translateY(-2px);
+}
+
+.metro-booking-right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.metro-booking-right img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.metro-routes {
+  padding: 40px 20px;
+  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.metro-routes h1 {
+  font-size: 2.5rem;
+  color: #0078d7;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+.metro-routes h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.metro-routes p {
+  font-size: 1rem;
+  color: #555;
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.metro-routes-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.metro-region {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.metro-region:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 120, 215, 0.15);
+}
+
+.metro-region h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #0078d7;
+  font-weight: 600;
+  border-bottom: 2px solid #0078d7;
+  padding-bottom: 0.4rem;
+}
+
+.metro-region ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metro-region li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fbff;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.metro-region li:hover {
+  box-shadow: 0 10px 30px rgba(0, 120, 215, 0.18);
+  transform: translateY(-3px);
+}
+
+.metro-route-fromto {
+  font-weight: 600;
+  color: #004a99;
+}
+
+.metro-route-price {
+  background: #d0e2ff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #003366;
+  text-align: center;
+  min-width: 60px;
+  box-shadow: inset 0 0 6px #aac4ff;
+}
+
+.qr-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.qr-container {
+  background: #fff;
+  padding: 20px 20px 30px 20px;
+  border-radius: 12px;
+  width: 340px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #eee;
+  border-top-color: #0078d7;
+  border-radius: 50%;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.success-text {
+  color: green;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.autocomplete {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.suggestions li:hover {
+  background: black;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  min-width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.popup-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popup-content li {
+  padding: 8px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.popup-content li:hover {
+  background-color: #0078d7;
+  color: #fff;
+}
+
+.close-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.qr-popup-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding-top: 12px;
+  background-color: transparent;
+}
+
+.qr-popup-button button {
+  padding: 8px 17px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+  color: #fff;
+}
+
+.qr-popup-button button:not(:last-child) {
+  background-color: #007bff;
+}
+
+.qr-popup-button button:not(:last-child):hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.qr-popup-button button:last-child {
+  background-color: #dc3545;
+}
+
+.qr-popup-button button:last-child:hover {
+  background-color: #a71d2a;
+}
+
+.qr-container input[type="password"] {
+  width: 100%;
+  padding: 9px 55px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.qr-container input[type="password"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+.upi-info {
+  margin-top: 8px;
+  font-size: 14px;
+  text-align: center;
+  color: #333;
+}
+
+@media (max-width: 900px) {
+  .metro-booking {
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  .metro-booking-left,
+  .metro-booking-right {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+  }
+
+  .metro-booking-right img {
+    width: 80%;
+    max-width: 350px;
+    height: auto;
+  }
+
+  .metro-routes-container {
+    grid-template-columns: 1fr;
+  }
+
+  .metro-routes h1 {
+    font-size: 2rem;
+  }
+
+  .metro-routes h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-container {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .qr-popup-button {
+    flex-direction: column;
+  }
+
+  .qr-popup-button button {
+    width: 100%;
+  }
+}

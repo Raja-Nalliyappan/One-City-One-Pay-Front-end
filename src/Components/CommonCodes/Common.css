@@ -1,0 +1,68 @@
+.errorMsg,
+.successMsg {
+  position: fixed;
+  top: 2px;
+  right: 2px;
+  padding: 7px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 999999;
+  color: #fff !important;
+}
+
+.errorMsg {
+  background-color: rgb(232, 96, 96);
+}
+
+.successMsg {
+  background-color: green;
+}
+
+.errorMsg.hide,
+.successMsg.hide {
+  opacity: 0;
+}
+
+/*Loading Effect*/
+.loading-container {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.loading-bar-container {
+  width: 80%;
+  max-width: 400px;
+  height: 5px;
+  background-color: #d3d3d3;
+  border-radius: 3px;
+  margin-top: 20px;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0;
+  background-color: #0073b1;
+  border-radius: 3px;
+  animation: load 2s forwards;
+}
+
+#loading-text {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes load {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+

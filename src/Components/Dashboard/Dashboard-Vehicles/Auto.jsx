@@ -1,0 +1,390 @@
+import { Footer } from "../Footer";
+import { Header } from "../Header";
+import { Nav } from "../Nav";
+import "./Auto.css";
+import Autos from "../Dashboard-images/Dashboard-Auto.png";
+import { useState, useEffect, useRef } from "react";
+import { QRCodeCanvas } from "qrcode.react";
+import axios from "axios";
+
+export const Auto = () => {
+
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [step, setStep] = useState(1);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [ticketData, setTicketData] = useState(null);
+  const [autoRoutes, setAutoRoutes] = useState([]);
+  const [searchFrom, setSearchFrom] = useState("");
+  const [searchTo, setSearchTo] = useState("");
+  const [filteredRoutes, setFilteredRoutes] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [fromFocus, setFromFocus] = useState(false);
+  const [toFocus, setToFocus] = useState(false);
+  const [autoPickerName, setAutoPickerName] = useState(null);
+  const ticketQRRef = useRef(null);
+
+  const OTP = Math.floor(Math.random() * 100000);
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+  const autoRouteList = [
+    {
+      id: "north-chennai",
+      title: "North Chennai",
+      routes: [
+        { fromTo: "Perambur → Kilpauk", price: "₹30" },
+        { fromTo: "Washermenpet → Egmore", price: "₹35" },
+        { fromTo: "Kolathur → Anna Nagar", price: "₹40" },
+        { fromTo: "Royapuram → Parrys Corner", price: "₹25" },
+        { fromTo: "Thiruvottiyur → Broadway", price: "₹30" },
+      ],
+    },
+    {
+      id: "east-chennai",
+      title: "East Chennai",
+      routes: [
+        { fromTo: "Perungudi → Adyar", price: "₹60" },
+        { fromTo: "Velachery → Adyar", price: "₹45" },
+        { fromTo: "Old Mahabalipuram Road → Sholinganallur", price: "₹50" },
+        { fromTo: "Thoraipakkam → Perungudi", price: "₹30" },
+        { fromTo: "Adyar → Besant Nagar", price: "₹35" },
+      ],
+    },
+    {
+      id: "south-chennai",
+      title: "South Chennai",
+      routes: [
+        { fromTo: "Sholinganallur → Velachery", price: "₹50" },
+        { fromTo: "Sholinganallur → Thoraipakkam", price: "₹25" },
+        { fromTo: "Perungudi → Sholinganallur", price: "₹35" },
+        { fromTo: "Mugalivakkam → Sholinganallur", price: "₹50" },
+        { fromTo: "Medavakkam → Adyar", price: "₹95" },
+      ],
+    },
+    {
+      id: "west-chennai",
+      title: "West Chennai",
+      routes: [
+        { fromTo: "Avadi → Ambattur", price: "₹35" },
+        { fromTo: "Ambattur → Koyambedu", price: "₹40" },
+        { fromTo: "Porur → DLF IT Park", price: "₹30" },
+        { fromTo: "Iyyappanthangal → Ramapuram", price: "₹30" },
+        { fromTo: "Kundrathur → Porur", price: "₹35" },
+      ],
+    },
+  ];
+
+  // Fetch Auto routes
+  useEffect(() => {
+    fetch("https://localhost:7172/api/Routes/AutoRoute")
+      .then((res) => res.json())
+      .then((data) => setAutoRoutes(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const fromLocations = [...new Set(autoRoutes.map((r) => r.fromLocation))].filter(Boolean);
+  const toLocations = [...new Set(autoRoutes.map((r) => r.toLocation))].filter(Boolean);
+
+  const fromSuggestions = fromLocations.filter((loc) =>
+    loc.toLowerCase().includes(searchFrom.toLowerCase())
+  );
+  const toSuggestions = toLocations.filter((loc) =>
+    loc.toLowerCase().includes(searchTo.toLowerCase())
+  );
+
+  const handleAutoSearch = () => {
+    const filtered = autoRoutes.filter((route) => {
+      const from = route.fromLocation || "";
+      const to = route.toLocation || "";
+      return (
+        (!searchFrom || from.toLowerCase().includes(searchFrom.toLowerCase())) &&
+        (!searchTo || to.toLowerCase().includes(searchTo.toLowerCase()))
+      );
+    });
+    setFilteredRoutes(filtered);
+    setShowPopup(true);
+  };
+
+  useEffect(() => {
+    const filtered = autoRoutes.filter((route) => {
+      const from = route.fromLocation || "";
+      const to = route.toLocation || "";
+      return (
+        (!searchFrom || from.toLowerCase().includes(searchFrom.toLowerCase())) &&
+        (!searchTo || to.toLowerCase().includes(searchTo.toLowerCase()))
+      );
+    });
+    setFilteredRoutes(filtered);
+  }, [searchFrom, searchTo, autoRoutes]);
+
+  // Notification permission
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  const handleSelectRoute = (route) => {
+    setSelectedRoute(route);
+    setStep(1);
+    setPassword("");
+    setSuccess(false);
+    setTicketData(null);
+  };
+
+  const handleRouteSelect = (route) => {
+    handleSelectRoute(route);
+    setShowPopup(false);
+  };
+
+  const getNumericPrice = (price) => {
+    if (typeof price === "number") return price;
+    if (typeof price === "string") return Number(price.replace("₹", ""));
+    return 0;
+  };
+
+  const handlePay = async () => {
+    if (!password) return alert("Please enter your password.");
+    if (password !== loggedInUser.password) return alert("Incorrect password!");
+
+    setLoading(true);
+    setSuccess(false);
+
+    setTimeout(() => {
+      setLoading(false);
+      setSuccess(true);
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Payment Successful ✅", {
+          body: `You paid ${selectedRoute.price} for ${selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`}`,
+          icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+        });
+      }
+    }, 2000);
+
+    setTimeout(showTicketQR, 3000);
+
+  //Handle for bookings acount and amount
+    const bookings = {
+      UserName: loggedInUser.name,
+      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
+      VehicleType: "Auto"
+    }
+
+    try{
+      const res = await axios.post("https://localhost:7172/api/BookingCountAndAmount/BookingCountAndAmountAuto", bookings);
+      console.log("✅ Response:", res.data)
+    }catch(err){
+      console.log("❌ Error posting booking:", err)
+    }
+  };
+
+  const showTicketQR = () => {
+    const data = {
+      ticketID: `TICKET-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      route: selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`,
+      amount: selectedRoute.price,
+      time: new Date().toLocaleString(),
+    };
+    setTicketData(data);
+    setStep(3);
+  };
+
+  const handleDownloadTicket = () => {
+    const canvas = ticketQRRef.current?.querySelector("canvas");
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "AutoTicket.png";
+    link.click();
+  };
+
+  // Random driver picker
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=10000&nat=IN")
+      .then((res) => res.json())
+      .then((json) => {
+        const users = json.results.map((user) => ({
+          fullName: `${user.name.first} ${user.name.last}`,
+          phone: user.phone,
+        }));
+        const randomIndex = Math.floor(Math.random() * users.length);
+        setAutoPickerName(users[randomIndex]);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  return (
+    <div className="auto-page">
+      <Header />
+      <Nav />
+
+      <div className="auto-booking">
+        <div className="auto-booking-left">
+          <h1>Request an Auto Ride</h1>
+          <p>Up to 50% off your first 5 auto rides. T&Cs apply.</p>
+
+          <div className="auto-inputs">
+            <div className="autocomplete">
+              <input
+                type="text"
+                placeholder="Enter pickup location"
+                value={searchFrom}
+                onChange={(e) => setSearchFrom(e.target.value)}
+                onFocus={() => setFromFocus(true)}
+                onBlur={() => setTimeout(() => setFromFocus(false), 150)}
+              />
+              {fromFocus && fromSuggestions.length > 0 && (
+                <ul className="suggestions">
+                  {fromSuggestions.map((loc, idx) => (
+                    <li key={idx} onMouseDown={() => setSearchFrom(loc)}>
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="autocomplete">
+              <input
+                type="text"
+                placeholder="Enter destination"
+                value={searchTo}
+                onChange={(e) => setSearchTo(e.target.value)}
+                onFocus={() => setToFocus(true)}
+                onBlur={() => setTimeout(() => setToFocus(false), 150)}
+              />
+              {toFocus && toSuggestions.length > 0 && (
+                <ul className="suggestions">
+                  {toSuggestions.map((loc, idx) => (
+                    <li key={idx} onMouseDown={() => setSearchTo(loc)}>
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="auto-buttons">
+            <button onClick={handleAutoSearch}>Check Prices</button>
+          </div>
+
+          {showPopup && (
+            <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+              <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                <h2>Available Routes</h2>
+                <button className="close-btn" onClick={() => setShowPopup(false)}>X</button>
+                {filteredRoutes.length > 0 ? (
+                  <ul>
+                    {filteredRoutes.map((route, idx) => (
+                      <li key={idx} onClick={() => handleRouteSelect(route)}>
+                        {route.fromLocation} → {route.toLocation} : ₹{route.price}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No routes found</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="auto-booking-right">
+          <img src={Autos} alt="Auto ride illustration" />
+        </div>
+      </div>
+
+      <div className="auto-routes">
+        <h1>Quick Auto Rides, Low Fares</h1>
+        <h3>Top Boarding & Dropping Points in Chennai</h3>
+        <p>Choose from popular auto routes across Chennai for a fast and affordable commute. Prices are estimated.</p>
+        <div className="auto-routes-container">
+          {autoRouteList.map((region) => (
+            <section className="auto-region" key={region.id}>
+              <h2>{region.title}</h2>
+              <ul>
+                {region.routes.map((route, idx) => (
+                  <li key={idx} onClick={() => handleSelectRoute(route)}>
+                    <span className="auto-route-fromto">{route.fromTo}</span>
+                    <span className="auto-route-price">{route.price}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </div>
+
+      {selectedRoute && (
+        <div className="qr-popup" onClick={() => setSelectedRoute(null)}>
+          <div className="qr-container" onClick={(e) => e.stopPropagation()}>
+            {step === 1 && (
+              <>
+                <h3>{selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`}</h3>
+                <p>Amount: <strong>{selectedRoute.price}</strong></p>
+                <QRCodeCanvas
+                  value={`upi://pay?pa=OneCitOnePay@oksbi&pn=Raja&tn=Auto Ride&am=${getNumericPrice(selectedRoute.price)}&cu=INR`}
+                  size={180}
+                />
+                <div className="qr-popup-button">
+                  <button onClick={() => setStep(2)}>Use to Pay</button>
+                  <button onClick={() => setSelectedRoute(null)}>Close</button>
+                </div>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <h3>Confirm Payment</h3>
+                <p>Pay {selectedRoute.price} for {selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`}</p>
+                <input
+                  type="password"
+                  placeholder="Enter your login password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {!loading && !success && (
+                  <div className="qr-popup-button">
+                    <button onClick={handlePay}>Pay</button>
+                    <button onClick={() => setSelectedRoute(null)}>Close</button>
+                  </div>
+                )}
+                {loading && <div className="spinner"></div>}
+                {success && <div className="success-text">Payment Successful ✅</div>}
+              </>
+            )}
+
+            {step === 3 && ticketData && (
+              <>
+                <h3>Your Ticket</h3>
+                <p style={{ margin: "5px" }}>Enjoy Your Ride</p>
+                <h3 style={{ margin: "5px", color:"green" }}>
+                  {selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`}
+                </h3>
+                <div ref={ticketQRRef}>
+                  <QRCodeCanvas value={JSON.stringify(ticketData)} size={180} />
+                </div>
+                {autoPickerName && (
+                  <div className="pickuper-info">
+                    <strong>Driver Name:</strong> {autoPickerName.fullName} <br />
+                    <strong>Driver Phone:</strong> {autoPickerName.phone} <br />
+                    <strong>OTP:</strong> {OTP}
+                  </div>
+                )}
+                <div className="qr-popup-button">
+                  <button onClick={handleDownloadTicket}>Download Ticket</button>
+                  <button onClick={() => setSelectedRoute(null)}>Close</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      <Footer />
+    </div>
+  );
+};
