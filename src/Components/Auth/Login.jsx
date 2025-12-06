@@ -40,7 +40,7 @@ export const Login = () => {
     }
 
     try {
-      const url = `https://localhost:7172/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+      const url = `https://one-city-one-pay-backend-file.onrender.com/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
       const res = await fetch(url);
       const datas = await res.json();
 
@@ -50,7 +50,8 @@ export const Login = () => {
       setTimeout(() => { navigate("/home-page") }, 2000);
       localStorage.setItem("loggedInUser", JSON.stringify({ name: datas.user.name, password }));
     } catch (err) {
-      seterrorMsg("Server error - check backend");
+      // seterrorMsg("Server error - check backend");
+      seterrorMsg(datas.message);
     }
   };
 
