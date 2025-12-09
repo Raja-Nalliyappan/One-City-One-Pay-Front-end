@@ -40,33 +40,18 @@ export const Login = () => {
     }
 
     try {
-  const url = `https://one-city-one-pay-backend-file.onrender.com/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-  const res = await fetch(url);
+      const url = `https://onecityonepaywebserver.onrender.com/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+      const res = await fetch(url);
+      const datas = await res.json();
 
-  const datas = await res.json(); // contains message from backend
-
-  // ❗ If backend returns 404, 400, 500, etc.
-  if (!res.ok) {
-    seterrorMsg(datas.message);   // <-- will show "User not found"
-    return;                       // <-- STOP here, do not continue
-  }
-
-  // SUCCESS — login OK
-  setIsLoading(true);
-  setsuccessMsg(datas.message);
-
-  setTimeout(() => setIsLoading(false), 3000);
-  setTimeout(() => navigate("/home-page"), 2000);
-
-  localStorage.setItem(
-    "loggedInUser",
-    JSON.stringify({ name: datas.user.name, password })
-  );
-
-} catch (err) {
-  seterrorMsg("Server error - check backend");
-}
-
+      setIsLoading(true)
+      setsuccessMsg(datas.message)
+      setTimeout(() => setIsLoading(false), 3000);
+      setTimeout(() => { navigate("/home-page") }, 2000);
+      localStorage.setItem("loggedInUser", JSON.stringify({ name: datas.user.name, password }));
+    } catch (err) {
+      seterrorMsg("Server error - check backend");
+    }
   };
 
 
