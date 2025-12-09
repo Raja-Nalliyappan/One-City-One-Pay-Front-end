@@ -44,22 +44,11 @@ export const Login = () => {
       const res = await fetch(url);
       const datas = await res.json();
 
-      if (!res.ok) {
-        seterrorMsg(datas.message);  
-        return;           
-      }
-      
-      setIsLoading(true);
-      setsuccessMsg(datas.message);
-
+      setIsLoading(true)
+      setsuccessMsg(datas.message)
       setTimeout(() => setIsLoading(false), 3000);
-      setTimeout(() => navigate("/home-page"), 2000);
-
-      localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify({ name: datas.user.name, password })
-      );
-
+      setTimeout(() => { navigate("/home-page") }, 2000);
+      localStorage.setItem("loggedInUser", JSON.stringify({ name: datas.user.name, password }));
     } catch (err) {
       seterrorMsg("Server error - check backend");
     }
@@ -86,7 +75,7 @@ export const Login = () => {
             <p>Please enter your details</p>
 
             <div className="input-group">
-              <label>Email address<span style={{ color: "red" }}>&#x2A;</span></label>
+              <label>Email address<span style={{color:"red"}}>&#x2A;</span></label>
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -97,7 +86,7 @@ export const Login = () => {
             </div>
 
             <div className="input-group">
-              <label>Password<span style={{ color: "red" }}>&#x2A;</span></label>
+              <label>Password<span style={{color:"red"}}>&#x2A;</span></label>
               <input
                 type="password"
                 placeholder="Enter your password"
