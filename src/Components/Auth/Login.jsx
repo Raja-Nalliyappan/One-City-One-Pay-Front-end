@@ -40,7 +40,8 @@ export const Login = () => {
     }
 
     try {
-      const url = `https://onecityonepaywebserver.onrender.com/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const url = `${API}/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
       const res = await fetch(url);
       const datas = await res.json();
 
