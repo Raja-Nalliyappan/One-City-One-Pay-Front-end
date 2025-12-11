@@ -6,8 +6,8 @@ import "../CommonCodes/Common.css"
 
 export const Login = () => {
   const [errorMsg, seterrorMsg] = useState("");
-  const [email, setemail] = useState("raja3710@gmail.com");
-  const [password, setpassword] = useState("Raja@3710");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [successMsg, setsuccessMsg] = useState("");
