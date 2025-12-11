@@ -65,7 +65,8 @@ export const Register = () => {
     }
 
     try {
-      const res = await axios.post("https://localhost:7172/api/Users", userData);
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/Users`, userData);
       setsuccessMsg(res.data);
 
       setTimeout(() => {

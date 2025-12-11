@@ -6,8 +6,8 @@ import "../CommonCodes/Common.css"
 
 export const Login = () => {
   const [errorMsg, seterrorMsg] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setemail] = useState("raja3710@gmail.com");
+  const [password, setpassword] = useState("Raja@3710");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [successMsg, setsuccessMsg] = useState("");
@@ -42,28 +42,28 @@ export const Login = () => {
     try {
       const API = process.env.REACT_APP_API_BASE_URL;
       const url = `${API}/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-      const res = await fetch(url);
-      const datas = await res.json();
+      const datas = await fetch(url);
 
-      if (!res.ok) {
+      if (!datas.ok) {
         seterrorMsg("User not found");  
         return;           
       }
-      
-      setIsLoading(true);
-      setsuccessMsg(datas.message);
+
+      const res = await datas.json();
 
       setTimeout(() => setIsLoading(false), 3000);
-      setTimeout(() => navigate("/home-page"), 2000);
-
-      localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify({ name: datas.user.name, password })
-      );
+      setIsLoading(true);
+      setsuccessMsg(res.message);
+      setTimeout(() => {setIsLoading(false) ; navigate("/home-page")}, 2000);
 
     } catch (err) {
       seterrorMsg("Server error - check backend");
+      return;
     }
+
+    //name and password storage
+    localStorage.setItem( "loggedInUser",JSON.stringify({password})); 
+
   };
 
 
