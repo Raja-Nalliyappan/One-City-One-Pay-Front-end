@@ -59,6 +59,8 @@ export const Login = () => {
 
       const userName = res.user;
       localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
+      localStorage.setItem("user", JSON.stringify({ name: userName }));
+
 
       setsuccessMsg(res.message);
       setTimeout(() => { ; navigate("/home-page") }, 2000);
