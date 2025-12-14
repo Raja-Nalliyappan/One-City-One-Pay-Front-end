@@ -32,7 +32,7 @@ export const Login = () => {
       seterrorMsg("Enter email and password");
       setIsLoading(false);
       return;
-    } else if ((email === "admin" || email === "Admin") && password === "12345") {
+    } else if ((email === "admin@gmail.com" || email === "Admin@gmail.com") && password === "12345") {
       setsuccessMsg("Login Successfully")
       setTimeout(() => {
         setIsLoading(false);

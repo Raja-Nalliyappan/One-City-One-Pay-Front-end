@@ -35,9 +35,9 @@ export const Register = () => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
   };
 
-  const passValid = (password) => {
-    return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*@)[A-Za-z\d@]{8,}$/.test(password);
-  }
+  // const passValid = (password) => {
+  //   return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*@)[A-Za-z\d@]{8,}$/.test(password);
+  // }
 
   function handleEnterKey(event){
     if(event.key === "Enter"){
@@ -54,7 +54,7 @@ export const Register = () => {
     if (!phoneNumber.trim()) return setError("Please enter your phone number.");
     if (phoneNumber.length !== 10) return setError("Phone number must be exactly 10 digits.");
     if (!password.trim()) return setError("Please enter a password.");
-    if (!passValid(password)) return setError("Password must 8 characters, including uppercase, lowercase, number, and '@' symbol.");
+    // if (!passValid(password)) return setError("Password must 8 characters, including uppercase, lowercase, number, and '@' symbol.");
     if (confirmPassword !== password) return setError("Passwords do not match.");
 
     const userData = {
