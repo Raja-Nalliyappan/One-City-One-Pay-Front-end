@@ -50,7 +50,7 @@ export const Login = () => {
 
       if (!datas.ok) {
         const errorRes = await datas.json();
-        seterrorMsg(errorRes.message || "User not found - Signu");
+        seterrorMsg(errorRes.message || "No account found. Sign up.");
         setIsLoading(false)
         return;
       }
