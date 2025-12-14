@@ -4,7 +4,6 @@ import dashboardLogo from "../Dashboard/Dashboard-images/DashboardLogo.png";
 import { Footer } from "../Dashboard/Footer";
 import { Header } from "./Header";
 import { Nav } from "./Nav";
-import { Outlet } from "react-router-dom";
 
 export const Dashboard = () => {
 
@@ -92,7 +91,6 @@ const submitReview = (e) => {
     <>
     <Header />
     <Nav />
-    <Outlet />
     <div className="dashboard">
       <div className="dashboard-image">
         <img src={dashboardLogo} alt="Chennai" />

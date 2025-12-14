@@ -23,12 +23,12 @@ function App() {
           <Route path="password-reset-page" element = {<ResetPassword />} />
           <Route path="admin-page" element = {<Admin />} />
           <Route path="home-page" element = {<Dashboard />} />
-            <Route path="bike-page" element = {<Bike />} />
-            <Route path="cars-page" element = {<Car />} />
-            <Route path="metro-page" element = {<Metro />} />
-            <Route path="local-train" element = {<LocalTrain />} />
-            <Route path="bus-page" element = {<Bus />} />
-            <Route path="auto-page" element = {<Auto />} />
+          <Route path="bike-page" element = {<Bike />} />
+          <Route path="cars-page" element = {<Car />} />
+          <Route path="metro-page" element = {<Metro />} />
+          <Route path="local-train" element = {<LocalTrain />} />
+          <Route path="bus-page" element = {<Bus />} />
+          <Route path="auto-page" element = {<Auto />} />
         </Routes>
       </BrowserRouter>
     </div>
