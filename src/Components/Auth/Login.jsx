@@ -19,6 +19,11 @@ export const Login = () => {
     }
   }, [errorMsg]);
 
+  useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) navigate("/home-page"); // if already logged in, skip login page
+    }, [navigate]);
+
 
   function handleEnterKey(event) {
 
@@ -58,8 +63,9 @@ export const Login = () => {
       const res = await datas.json();
 
       const userName = res.user;
-      localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
-      localStorage.setItem("user", JSON.stringify({ name: userName }));
+      // localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
+      localStorage.setItem("user", JSON.stringify({ name: userName, password }));
+      // localStorage.setItem("user", JSON.stringify({ name: userName }));
 
 
       setsuccessMsg(res.message);
