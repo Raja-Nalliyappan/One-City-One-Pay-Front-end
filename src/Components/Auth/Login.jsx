@@ -19,12 +19,6 @@ export const Login = () => {
     }
   }, [errorMsg]);
 
-  useEffect(() => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) navigate("/home-page"); // if already logged in, skip login page
-    }, [navigate]);
-
-
   function handleEnterKey(event) {
 
     if (event.key === "Enter") {
