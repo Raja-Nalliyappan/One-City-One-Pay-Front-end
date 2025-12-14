@@ -78,7 +78,8 @@ export const Car = () => {
 
   // Fetch from API (optional)
   useEffect(() => {
-    fetch("https://localhost:7172/api/Routes/CarRoute")
+    const API = process.env.REACT_APP_API_BASE_URL;
+    fetch(`${API}/api/Routes/CarRoute`)
       .then((res) => res.json())
       .then((data) => setCarRoutes(data))
       .catch((err) => console.log(err));
@@ -166,7 +167,8 @@ export const Car = () => {
     }
 
     try{
-      const res = await axios.post("https://localhost:7172/api/BookingCountAndAmount/BookingCountAndAmountCar", bookings);
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountCar`, bookings);
       console.log("✅ Response:", res.data)
     }catch(err){
       console.log("❌ Error posting booking:", err)

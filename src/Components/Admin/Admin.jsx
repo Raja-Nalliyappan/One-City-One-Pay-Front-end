@@ -63,25 +63,27 @@ export const Admin = () => {
     }
   }
 
+  const API = process.env.REACT_APP_API_BASE_URL;
   //Bike Booking Count and amount 
   useEffect(() => {
-    fetch("https://localhost:7172/api/Users/GetRegisterUserList")
+    
+    fetch(`${API}/api/Users/GetRegisterUserList`)
       .then((response) => response.json())
       .then((users) => {
         setUsers(users);
       })
-  }, [])
+  }, [API])
 
   useEffect(() => {
     const fetchBookingList = async () => {
       try {
         const [bikeRes, autoRes, carRes, busRes, metroRes, localTrainRes] = await Promise.all([
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetBikeBookingCountAndAmount"),
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetAutoBookingCountAndAmount"),
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetCarBookingCountAndAmount"),
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetBusBookingCountAndAmount"),
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetMetroBookingCountAndAmount"),
-          fetch("https://localhost:7172/api/BookingCountAndAmount/GetLocalTrainBookingCountAndAmount")
+          fetch(`${API}/api/BookingCountAndAmount/GetBikeBookingCountAndAmount`),
+          fetch(`${API}/api/BookingCountAndAmount/GetAutoBookingCountAndAmount`),
+          fetch(`${API}/api/BookingCountAndAmount/GetCarBookingCountAndAmount`),
+          fetch(`${API}/api/BookingCountAndAmount/GetBusBookingCountAndAmount`),
+          fetch(`${API}/api/BookingCountAndAmount/GetMetroBookingCountAndAmount`),
+          fetch(`${API}/api/BookingCountAndAmount/GetLocalTrainBookingCountAndAmount`)
         ])
         const [bikeData, autoData, carData, busData, metroData, localTraindData] = await Promise.all([bikeRes.json(), autoRes.json(), carRes.json(), busRes.json(), metroRes.json(), localTrainRes.json()]);
 
@@ -91,7 +93,7 @@ export const Admin = () => {
       }
     }
     fetchBookingList()
-  }, [])
+  }, [API])
 
 
 
@@ -100,7 +102,7 @@ export const Admin = () => {
       <aside className="sidebar">
         <h2>One City One Pay</h2>
         <nav>
-          {['dashboard', 'bookings', 'users', 'reports', 'settings', ``].map((section) => (
+          {['dashboard', 'bookings', 'users'].map((section) => (
             <a
               href="#"
               key={section}

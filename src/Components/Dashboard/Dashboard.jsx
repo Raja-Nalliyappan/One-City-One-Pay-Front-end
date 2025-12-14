@@ -12,7 +12,8 @@ const [reviewComments, setReviewComments] = useState([]);
 
 const fetchReviews = async () => {
   try {
-    const res = await fetch("https://localhost:7172/api/Reviews/GetUserReviewsComments");
+    const API = process.env.REACT_APP_API_BASE_URL;
+    const res = await fetch(`${API}/api/Reviews/GetUserReviewsComments`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     setReviewComments(await res.json());
   } catch (err) {
@@ -27,7 +28,8 @@ useEffect(() => {
 const submitReview = (e) => {
   e.preventDefault();
   const { name, comment } = formData;
-  fetch(`https://localhost:7172/api/Reviews/AddUserReviewComments?Name=${encodeURIComponent(name)}&ReviewComments=${encodeURIComponent(comment)}`,
+  const API = process.env.REACT_APP_API_BASE_URL;
+  fetch(`${API}/api/Reviews/AddUserReviewComments?Name=${encodeURIComponent(name)}&ReviewComments=${encodeURIComponent(comment)}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -21,7 +21,10 @@ export const Login = () => {
 
 
   function handleEnterKey(event) {
-    if (event.key === "Enter") fetchLoginUsers();
+
+    if (event.key === "Enter") {
+      fetchLoginUsers();
+    }
   }
 
   const fetchLoginUsers = async () => {
@@ -40,29 +43,31 @@ export const Login = () => {
     }
 
     try {
+      setIsLoading(true)
       const API = process.env.REACT_APP_API_BASE_URL;
       const url = `${API}/api/Users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
       const datas = await fetch(url);
 
       if (!datas.ok) {
-        seterrorMsg("User not found");  
-        return;           
+        const errorRes = await datas.json();
+        seterrorMsg(errorRes.message || "User not found - Signu");
+        setIsLoading(false)
+        return;
       }
 
       const res = await datas.json();
 
-      setTimeout(() => setIsLoading(false), 3000);
-      setIsLoading(true);
+      const userName = res.user;
+      localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
+
       setsuccessMsg(res.message);
-      setTimeout(() => {setIsLoading(false) ; navigate("/home-page")}, 2000);
+      setTimeout(() => { ; navigate("/home-page") }, 2000);
 
     } catch (err) {
       seterrorMsg("Server error - check backend");
-      return;
+    } finally {
+      setTimeout(() => setIsLoading(false), 3000);
     }
-
-    //name and password storage
-    localStorage.setItem( "loggedInUser",JSON.stringify({password})); 
 
   };
 
@@ -86,39 +91,42 @@ export const Login = () => {
             <h2>Welcome back...</h2>
             <p>Please enter your details</p>
 
-            <div className="input-group">
-              <label>Email address<span style={{ color: "red" }}>&#x2A;</span></label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setemail(e.target.value)}
-                onKeyDown={handleEnterKey}
-              />
-            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              await fetchLoginUsers();
+            }}>
+              <div className="input-group">
+                <label>Email address<span style={{ color: "red" }}>&#x2A;</span></label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setemail(e.target.value)}
+                  onKeyDown={handleEnterKey}
+                  autoComplete="current-email"
+                  required
+                />
+              </div>
 
-            <div className="input-group">
-              <label>Password<span style={{ color: "red" }}>&#x2A;</span></label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setpassword(e.target.value)}
-                onKeyDown={handleEnterKey}
-              />
-            </div>
+              <div className="input-group">
+                <label>Password<span style={{ color: "red" }}>&#x2A;</span></label>
+                <input
+                  placeholder="Enter your password"
+                  onChange={(e) => setpassword(e.target.value)}
+                  onKeyDown={handleEnterKey}
+                  autoComplete="current-password"
+                  required type="password"
+                />
+              </div>
 
-            <div className="forgot-link">
-              <Link to="/password-reset-page">Reset your password</Link>
-            </div>
+              <div className="forgot-link">
+                <Link to="/password-reset-page">Reset your password</Link>
+              </div>
 
-            <button className="login-btn" onClick={fetchLoginUsers} disabled={isLoading}>
-              {isLoading ? "Login..." : "Login"}
-            </button>
+              <button type="submit" className="login-btn" disabled={isLoading}>{isLoading ? "Login..." : "Login"}</button>
+            </form>
 
-            <div className="signup-link">
-              Don’t have an account? <Link to="/signup-page">Sign up</Link>
-            </div>
+            <div className="signup-link">Don’t have an account? <Link to="/signup-page">Sign up</Link></div>
           </div>
 
           <div className="login-illustration">

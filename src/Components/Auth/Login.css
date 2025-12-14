@@ -23,7 +23,7 @@ body {
 
 .login-card {
   display: flex;
-  flex-direction: row-reverse; 
+  flex-direction: row-reverse;
   width: 100%;
   height: 100vh;
   background: #fff;
@@ -124,3 +124,9 @@ body {
   font-weight: 500;
 }
 
+
+@media (min-width: 1366px) {
+  .login-content {
+    padding: 40px 160px;
+  }
+}

@@ -77,7 +77,8 @@ export const Bike = () => {
   ];
 
   useEffect(() => {
-    fetch("https://localhost:7172/api/Routes/BikeRoute")
+    const API = process.env.REACT_APP_API_BASE_URL;
+    fetch(`${API}/api/Routes/BikeRoute`)
       .then((res) => res.json())
       .then((data) => setBikeRoutes(data))
       .catch((err) => console.log(err));
@@ -168,7 +169,9 @@ export const Bike = () => {
     }
 
     try{
-      const res = await axios.post("https://localhost:7172/api/BookingCountAndAmount/BookingCountAndAmountBike", bookings);
+      const API = process.env.REACT_APP_API_BASE_URL;
+       console.log("API URL:", API);
+      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountBike`, bookings);
       console.log("Response:", res.data)
     }catch(err){
       console.log("Error posting booking:", err)
@@ -278,7 +281,7 @@ export const Bike = () => {
                 </button>
                 {filteredRoutes.length > 0 ? (
                   <ul>
-                    {filteredRoutes.map((route, idx) => (
+                    {filteredRoutes.slice(0,100).map((route, idx) => (
                       <li key={idx} onClick={() => handleRouteSelect(route)}>
                         {route.fromLocation} → {route.toLocation} : ₹{route.price}
                       </li>

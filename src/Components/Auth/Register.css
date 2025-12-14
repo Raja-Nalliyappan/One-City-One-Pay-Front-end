@@ -141,3 +141,10 @@ body {
 .successMsg-box.hide {
   opacity: 0;
 }
+
+
+@media (min-width: 1366px) {
+  .register-content{
+    padding: 20px 165px;
+  }
+}
