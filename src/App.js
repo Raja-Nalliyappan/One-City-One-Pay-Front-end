@@ -15,7 +15,7 @@ import { ResetPassword } from "./Components/Auth/ResetPassword";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter basename="/">
+      <BrowserRouter >
         <Routes>
           <Route path="/" element = {<Login />} />
           <Route path="signup-page" element = {<Register />} />
