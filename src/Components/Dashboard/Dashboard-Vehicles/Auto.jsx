@@ -147,7 +147,7 @@ export const Auto = () => {
 
   const handlePay = async () => {
     if (!password) return alert("Please enter your password.");
-    if (password !== user.password) return alert("Incorrect password!");
+    if (password !== password) return alert("Incorrect password!");
 
     setLoading(true);
     setSuccess(false);
