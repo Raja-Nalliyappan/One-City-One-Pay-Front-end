@@ -57,8 +57,8 @@ export const Login = () => {
       const res = await datas.json();
 
       const userName = res.user;
-      localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
-      // localStorage.setItem("user", JSON.stringify({ name: userName, password }));
+      // localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
+      localStorage.setItem("user", JSON.stringify({ name: userName, password }));
       // localStorage.setItem("user", JSON.stringify({ name: userName }));
 
 
