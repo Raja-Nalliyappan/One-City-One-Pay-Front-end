@@ -1,7 +1,7 @@
 import { Footer } from "../Footer";
 import { Header } from "../Header";
 import { Nav } from "../Nav";
-import trainImg from "../Dashboard-images/Dashboard-LocalTrain.png";  
+import trainImg from "../Dashboard-images/Dashboard-LocalTrain.png";
 import "./Local-Train.css";
 import { useState, useEffect, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
@@ -147,6 +147,26 @@ export const LocalTrain = () => {
   const handlePay = async () => {
     if (!password) return alert("Please enter your password.");
     if (password !== password) return alert("Incorrect password!");
+
+    //Handle for bookings acount and amount
+    let loginUsername = JSON.parse(localStorage.getItem("user")).name
+
+    const bookings = {
+      UserName: loginUsername,
+      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim() || 0),
+      VehicleType: "LocalTrain"
+    }
+
+    try {
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountLocalTrain`, bookings);
+      payment()
+    } catch (err) {
+      alert("Payment failed due to a service issue.", err)
+    }
+  };
+
+  function payment() {
     setLoading(true);
     setSuccess(false);
     setTimeout(() => {
@@ -160,22 +180,7 @@ export const LocalTrain = () => {
       }
     }, 2000);
     setTimeout(showTicketQR, 3000);
-
-    //Handle for bookings acount and amount
-    const bookings = {
-      UserName: loggedInUser.name,
-      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
-      VehicleType: "LocalTrain"
-    }
-
-    try{
-      const API = process.env.REACT_APP_API_BASE_URL;
-      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountLocalTrain`, bookings);
-      console.log("✅ Response:", res.data)
-    }catch(err){
-      console.log("❌ Error posting booking:", err)
-    }
-  };
+  }
 
   const showTicketQR = () => {
     const data = {
@@ -362,7 +367,7 @@ export const LocalTrain = () => {
               <>
                 <h3>Your Ticket</h3>
                 <p style={{ margin: "5px" }}>Enjoy Your Ride</p>
-                <h3 style={{ margin: "5px", color:"green" }}>
+                <h3 style={{ margin: "5px", color: "green" }}>
                   {selectedRoute.fromTo || `${selectedRoute.fromLocation} → ${selectedRoute.toLocation}`}
                 </h3>
                 <div ref={ticketQRRef}>

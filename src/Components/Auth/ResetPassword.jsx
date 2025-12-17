@@ -22,25 +22,16 @@ export const ResetPassword = () => {
     setTimeout(() => setSuccessMsg(""), 3000);
   };
 
-  const passValid = (newPassword) => {
-    return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*@)[A-Za-z\d@]{8,}$/.test(newPassword);
-  }
-
   const resetPassword = async () => {
     if (!email || !newPassword) {
       showError("Please enter both email and new password.");
       return;
     }
 
-    if(!passValid(newPassword)){
-      showError("Password must 8 characters, including uppercase, lowercase, number, and '@' symbol.");
-      return 
-    }
-
-
     setLoading(true);
     try {
-      const res = await axios.post("https://localhost:7172/api/Users/reset-password", {
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/Users/reset-password`, {
         email,
         newPassword,
       });

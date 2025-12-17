@@ -77,7 +77,8 @@ export const Metro = () => {
   ];
 
   useEffect(() => {
-    fetch("https://localhost:7172/api/Routes/MetroRoute")
+    const API = process.env.REACT_APP_API_BASE_URL;
+    fetch(`${API}/api/Routes/MetroRoute`)
       .then((res) => res.json())
       .then((data) => setMetroRoutes(data))
       .catch((err) => console.log(err));
@@ -146,6 +147,26 @@ export const Metro = () => {
   const handlePay = async () => {
     if (!password) return alert("Please enter your password.");
     if (password !== password) return alert("Incorrect password!");
+
+  //Handle for bookings acount and amount
+  let loginUsername = JSON.parse(localStorage.getItem("user")).name
+    const bookings = {
+      UserName: loginUsername,
+      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
+      VehicleType: "Metro"
+    }
+
+    try{
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountMetro`, bookings);
+      console.log("✅ Response:", res.data)
+      payment()
+    }catch(err){
+      alert("Payment failed due to a service issue.", err)
+    }
+  };
+
+  function payment () {
     setLoading(true);
     setSuccess(false);
     setTimeout(() => {
@@ -159,21 +180,7 @@ export const Metro = () => {
       }
     }, 2000);
     setTimeout(showTicketQR, 3000);
-
-  //Handle for bookings acount and amount
-    const bookings = {
-      UserName: loggedInUser.name,
-      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
-      VehicleType: "Metro"
-    }
-
-    try{
-      const res = await axios.post("https://localhost:7172/api/BookingCountAndAmount/BookingCountAndAmountMetro", bookings);
-      console.log("✅ Response:", res.data)
-    }catch(err){
-      console.log("❌ Error posting booking:", err)
-    }
-  };
+  }
 
   const showTicketQR = () => {
     const data = {
@@ -195,20 +202,6 @@ export const Metro = () => {
       link.click();
     }
   };
-
-  // useEffect(() => {
-  //   fetch("https://randomuser.me/api/?results=10000&nat=IN")
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       const users = json.results.map((user) => ({
-  //         fullName: `${user.name.first} ${user.name.last}`,
-  //         phone: user.phone,
-  //       }));
-  //       const randomIndex = Math.floor(Math.random() * users.length);
-  //       setMetroPickerName(users[randomIndex]);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }, []);
 
   return (
     <div className="metro-page">

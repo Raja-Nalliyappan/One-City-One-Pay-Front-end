@@ -145,6 +145,28 @@ export const Car = () => {
   const handlePay = async () => {
     if (!password) return alert("Please enter your password.");
     if (password !== password) return alert("Incorrect password!");
+    
+    setTimeout(showTicketQR, 3000);
+
+  //Handle for bookings acount and amount
+    let loginUsername = JSON.parse(localStorage.getItem("user")).name
+
+    const bookings = {
+      UserName: loginUsername,
+      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
+      VehicleType: "Car"
+    }
+
+    try{
+      const API = process.env.REACT_APP_API_BASE_URL;
+      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountCar`, bookings);
+      payment ()
+    }catch(err){
+      alert("Payment failed due to a service issue.", err)
+    }
+  };
+
+  function payment () {
     setLoading(true);
     setSuccess(false);
     setTimeout(() => {
@@ -157,23 +179,7 @@ export const Car = () => {
         });
       }
     }, 2000);
-    setTimeout(showTicketQR, 3000);
-
-  //Handle for bookings acount and amount
-    const bookings = {
-      UserName: loggedInUser.name,
-      BookingAmount: Number(selectedRoute?.price?.toString().replace("₹", "").trim()||0),
-      VehicleType: "Car"
-    }
-
-    try{
-      const API = process.env.REACT_APP_API_BASE_URL;
-      const res = await axios.post(`${API}/api/BookingCountAndAmount/BookingCountAndAmountCar`, bookings);
-      console.log("✅ Response:", res.data)
-    }catch(err){
-      console.log("❌ Error posting booking:", err)
-    }
-  };
+  }
 
   const showTicketQR = () => {
     const data = {

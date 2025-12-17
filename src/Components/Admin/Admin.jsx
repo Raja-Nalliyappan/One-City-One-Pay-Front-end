@@ -8,6 +8,7 @@ export const Admin = () => {
   const [bookings, setBookings] = useState([]);
   const [users, setUsers] = useState([]);
   const [summary, setSummary] = useState({});
+  const [isLoading, setisLoading] = useState(false)
 
   useEffect(() => {
     summarizeBookings();
@@ -66,7 +67,7 @@ export const Admin = () => {
   const API = process.env.REACT_APP_API_BASE_URL;
   //Bike Booking Count and amount 
   useEffect(() => {
-    
+
     fetch(`${API}/api/Users/GetRegisterUserList`)
       .then((response) => response.json())
       .then((users) => {
@@ -76,6 +77,7 @@ export const Admin = () => {
 
   useEffect(() => {
     const fetchBookingList = async () => {
+      setisLoading(true)
       try {
         const [bikeRes, autoRes, carRes, busRes, metroRes, localTrainRes] = await Promise.all([
           fetch(`${API}/api/BookingCountAndAmount/GetBikeBookingCountAndAmount`),
@@ -90,6 +92,8 @@ export const Admin = () => {
         setBookings([...bikeData, ...autoData, ...carData, ...busData, ...metroData, ...localTraindData])
       } catch (error) {
         console.error("Error fetching bookings:", error);
+      } finally {
+        setisLoading(false)
       }
     }
     fetchBookingList()
@@ -98,142 +102,153 @@ export const Admin = () => {
 
 
   return (
-    <div className="admin-dashboard">
-      <aside className="sidebar">
-        <h2>One City One Pay</h2>
-        <nav>
-          {['dashboard', 'bookings', 'users'].map((section) => (
+    <>
+      <div className="admin-dashboard">
+        <aside className="sidebar">
+          <h2>One City One Pay</h2>
+          <nav>
+            {['dashboard', 'bookings', 'users'].map((section) => (
+              <a
+                href="#"
+                key={section}
+                className={activeSection === section ? 'active' : ''}
+                onClick={() => handleSectionChange(section)}
+              >
+                {section.charAt(0).toUpperCase() + section.slice(1)}
+              </a>
+            ))}
             <a
               href="#"
-              key={section}
-              className={activeSection === section ? 'active' : ''}
-              onClick={() => handleSectionChange(section)}
-            >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
+              onClick={handleLogout}
+              className="logout-button">Logout
             </a>
-          ))}
-          <a
-            href="#"
-            onClick={handleLogout}
-            className="logout-button">Logout
-          </a>
-        </nav>
-      </aside>
+          </nav>
+        </aside>
 
-      <main>
-        {/* Dashboard Section */}
-        {activeSection === 'dashboard' && (
-          <section id="dashboard" className="content-section active">
-            <div className="cards">
-              <div className="card">
-                <h3>Total Bookings</h3>
-                <p>{bookings.length.toLocaleString()}</p>
-              </div>
-              <div className="card">
-                <h3>Total Payments</h3>
-                <p>${(bookings.reduce((sum, b) => sum + (b.bookingAmount ?? 0), 0)).toLocaleString()}</p>
-              </div>
-              <div className="card">
-                <h3>Active Users</h3>
-                <p>{[...new Set(users.map((user) => user.name).filter(Boolean))].length.toLocaleString()}</p>
-              </div>
+        {isLoading ? (
+          <div className="loading-container">
+            <div className="loading-bar-container">
+              <div className="loading-bar" id="loading-bar"></div>
             </div>
-
-            <div className='booking-count-list' style={{ marginTop: "50px" }}>
-              <h2>Bookings Summary by Type</h2>
-              <div className="cards" id="bookingSummaryCards">
-                {Object.keys(summary).map((vehicleType) => (
-                  <div key={vehicleType} className="card">
-                    <h3>{vehicleType} Bookings</h3>
-                    <p>Count: {summary[vehicleType].count.toLocaleString()}</p>
-                    <p>Amount: ${summary[vehicleType].amount.toLocaleString()}</p>
+            <div id="loading-text">Loading information...</div>
+          </div>
+        ) : (
+          <main>
+            {/* Dashboard Section */}
+            {activeSection === 'dashboard' && (
+              <section id="dashboard" className="content-section active">
+                <div className="cards">
+                  <div className="card">
+                    <h3>Total Bookings</h3>
+                    <p>{bookings.length.toLocaleString()}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+                  <div className="card">
+                    <h3>Total Payments</h3>
+                    <p>${(bookings.reduce((sum, b) => sum + (b.bookingAmount ?? 0), 0)).toLocaleString()}</p>
+                  </div>
+                  <div className="card">
+                    <h3>Active Users</h3>
+                    <p>{[...new Set(users.map((user) => user.name).filter(Boolean))].length.toLocaleString()}</p>
+                  </div>
+                </div>
 
-        {/* Bookings Section */}
-        {activeSection === 'bookings' && (
-          <section id="bookings" className="content-section active">
-            <h2>Bookings</h2>
-            <div className="search-box">
-              <input
-                type="text"
-                id="bookingSearchInput"
-                placeholder="Search bookings by user name or booking types..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </div>
-            <table id="bookingsTable">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>User</th>
-                  <th>Booking Type</th>
-                  <th>Date</th>
-                  <th>Fare</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredBookings.map((booking,index) => (
-                  <tr key={booking.id}>
-                    <td>{index + 1}</td>
-                    <td>{booking.userName}</td>
-                    <td>{booking.vehicleType}</td>
-                    <td>{booking.bookingDate ? booking.bookingDate.slice(0, 10) : 0}</td>
-                    <td>{booking.bookingAmount?.toLocaleString() || 0}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-        )}
+                <div className='booking-count-list' style={{ marginTop: "50px" }}>
+                  <h2>Bookings Summary by Type</h2>
+                  <div className="cards" id="bookingSummaryCards">
+                    {Object.keys(summary).map((vehicleType) => (
+                      <div key={vehicleType} className="card">
+                        <h3>{vehicleType} Bookings</h3>
+                        <p>Count: {summary[vehicleType].count.toLocaleString()}</p>
+                        <p>Amount: ${summary[vehicleType].amount.toLocaleString()}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
 
-        {/* Users Section */}
-        {activeSection === 'users' && (
-          <section id="users" className="content-section active">
-            <h2>Users</h2>
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Search users by name or phone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <table id="usersTable">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>phone</th>
-                  <th>Registered On</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUserList.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone}</td>
-                    <td>{user.registerDate ? user.registerDate.slice(0, 10) : ""}</td>
-                    <td>
-                      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
+            {/* Bookings Section */}
+            {activeSection === 'bookings' && (
+              <section id="bookings" className="content-section active">
+                <h2>Bookings</h2>
+                <div className="search-box">
+                  <input
+                    type="text"
+                    id="bookingSearchInput"
+                    placeholder="Search bookings by user name or booking types..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                  />
+                </div>
+                <table id="bookingsTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>User</th>
+                      <th>Booking Type</th>
+                      <th>Date</th>
+                      <th>Fare</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBookings.map((booking, index) => (
+                      <tr key={booking.id}>
+                        <td>{index + 1}</td>
+                        <td>{booking.userName}</td>
+                        <td>{booking.vehicleType}</td>
+                        <td>{booking.bookingDate ? booking.bookingDate.slice(0, 10) : 0}</td>
+                        <td>{booking.bookingAmount?.toLocaleString() || 0}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
+            )}
+
+            {/* Users Section */}
+            {activeSection === 'users' && (
+              <section id="users" className="content-section active">
+                <h2>Users</h2>
+                <div className="search-box">
+                  <input
+                    type="text"
+                    placeholder="Search users by name or phone..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <table id="usersTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>phone</th>
+                      <th>Registered On</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUserList.map((user) => (
+                      <tr key={user.id}>
+                        <td>{user.id}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phone}</td>
+                        <td>{user.registerDate ? user.registerDate.slice(0, 10) : ""}</td>
+                        <td>
+                          <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
+            )}
+          </main>
         )}
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 

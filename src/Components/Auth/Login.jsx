@@ -31,14 +31,6 @@ export const Login = () => {
       seterrorMsg("Enter email and password");
       setIsLoading(false);
       return;
-    } else if ((email === "admin@gmail.com" || email === "Admin@gmail.com") && password === "12345") {
-      setsuccessMsg("Login Successfully")
-      setTimeout(() => {
-        setIsLoading(false);
-        setsuccessMsg("");
-        navigate("/admin-page");
-      }, 3000);
-      return;
     }
 
     try {
@@ -56,14 +48,17 @@ export const Login = () => {
 
       const res = await datas.json();
 
+      if (res.user.toLowerCase() == "admin") {
+        setIsLoading(true)
+        setsuccessMsg("Login Successfully")
+        navigate("/admin-page");
+      } else {
+        setsuccessMsg(res.message);
+        setTimeout(() => { ; navigate("/home-page") }, 2000);
+      }
+
       const userName = res.user;
-      // localStorage.setItem("loggedInUser", JSON.stringify({ name: userName, password }));
       localStorage.setItem("user", JSON.stringify({ name: userName, password }));
-      // localStorage.setItem("user", JSON.stringify({ name: userName }));
-
-
-      setsuccessMsg(res.message);
-      setTimeout(() => { ; navigate("/home-page") }, 2000);
 
     } catch (err) {
       seterrorMsg("Server error - check backend");

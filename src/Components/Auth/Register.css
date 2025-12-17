@@ -148,3 +148,15 @@ body {
     padding: 20px 165px;
   }
 }
+
+@media (min-width: 0px) and (max-width: 480px){
+  .illustration{
+    display: none;
+  }
+  .illustration img{
+    display: none;
+  }
+  .register-content{
+    flex: auto;
+  }
+}

@@ -130,3 +130,12 @@ body {
     padding: 40px 160px;
   }
 }
+
+@media (min-width: 0px) and (max-width: 480px){
+  .login-illustration{
+    display: none;
+  }
+  .login-illustration img{
+    display: none;
+  }
+}
