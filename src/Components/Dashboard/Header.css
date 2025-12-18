@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 30px; 
+  padding: 0 30px;
   height: 80px;
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -26,23 +26,40 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 22px;
   color: #1e90ff;
+  text-align: center;
+  margin-left: -100%;
 }
 
-.header-right .logout-btn {
-  background-color: #6a4bc3;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-  text-decoration: none;
+.loginProfile {
+  position: absolute;
+  right: 30px;
+  top: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.header-right .logout-btn:hover {
-  background-color: #5736a0;
+.loginProfile p {
+  color: black;
+  font-size: 15px;
+  margin: 0;
 }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  font-size: 5px;
+  right: 40px;
+  top: -20px;
+  
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
 
 
 @media (max-width: 768px) {
@@ -53,5 +70,18 @@
 
   .header-center h1 {
     font-size: 18px;
+  }
+}
+
+@media (min-width: 0px) and (max-width:480px) {
+  .loginProfile {
+    position: absolute;
+    right: 10px;
+    top: 25px;
+  }
+
+  .loginProfile p {
+    max-width: 100px;
+    font-size: 13px;
   }
 }
